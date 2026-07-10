@@ -1,0 +1,19 @@
+# Copy this file to config/project.yaml and customize paths.
+latex_project_root: ../../MoinAbbasCV
+main_tex_file: cv.tex
+section_files:
+  - cv/summary.tex
+  - cv/experience.tex
+
+# Engine matters for custom fonts. Most modern CV templates use xelatex or lualatex.
+latex_engine: xelatex
+
+# Temporary TeX build artifacts and final PDF destination.
+build_work_dir: .build
+output_dir: ../output
+pdf_name: cv_tailored.pdf
+
+# AI model settings.
+model: gpt-4o-mini
+temperature: 0.2
+max_output_tokens: 3500

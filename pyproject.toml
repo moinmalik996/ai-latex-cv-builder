@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-latex-cv-builder"
+version = "0.1.0"
+description = "AI-assisted text tailoring for modular LaTeX CVs"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=1.50.0",
+  "PyYAML>=6.0.2",
+  "python-dotenv>=1.0.1",
+]
+
+[project.scripts]
+ai-cv = "ai_latex_cv_builder.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

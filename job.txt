@@ -1,0 +1,57 @@
+About the job
+About Us
+
+Skuuudle is a scaleup supporting the pricing strategy of some of the world’s largest retailers with market-leading competitive pricing intelligence. Although we are well established, we are proud of our start-up culture of collaboration, ownership and ingenuity. 
+
+We are looking for a talented and pragmatic Software Developer to join our team of around 60 people and help us build reliable internal infrastructure that supports large-scale ecommerce data products.
+
+
+
+The Role
+
+We are looking for a developer to work on a new internal connectivity service that sits between our existing data collection systems and the external websites they access.
+
+This role focused on the network and routing layer that allows our internal data collection systems to make reliable outbound web requests at scale.
+
+The system will manage how requests are routed through different connectivity options, including external providers and managed network connections. It will need to handle provider selection, routing rules, retries, failure detection, captcha solving, bot handling, performance monitoring, availability and operational controls.
+
+This is a hands-on engineering role suited to someone who enjoys backend infrastructure, HTTP/networking problems, reliability engineering and building internal services that other engineering teams depend on.
+
+
+
+The Day-to-Day
+
+You will be involved in:
+
+Designing and building an internal connectivity service for outbound web requests.
+Creating routing logic across multiple network and provider options.
+Integrating with third-party connectivity and infrastructure providers.
+Building controls for provider selection, failover, retry behaviour and error handling.
+Measuring and improving success rates, latency, availability and cost efficiency.
+Developing monitoring, diagnostics and operational tooling.
+Working with APIs, databases, queues, workers and automation components.
+Collaborating with teams that build our existing data collection platform, while focusing specifically on the routing and connectivity layer beneath it.
+ 
+
+What We’re Looking For
+
+Strong general software engineering skills
+Strong Python Knowledge
+Experience building backend services, infrastructure systems or automation-heavy tools.
+Good understanding of HTTP, APIs, DNS, TLS, networking fundamentals and web technologies.
+Experience integrating with third-party APIs, infrastructure providers or external services.
+Familiarity with databases, queues, workers or distributed processing.
+Ability to take ownership of ambiguous technical problems and deliver pragmatic solutions.
+Strong debugging, troubleshooting and problem-solving skills.
+ 
+
+What Makes You Stand Out
+
+Experience building request-routing, traffic-management or connectivity services.
+Familiarity with proxies, VPNs, tunnels, gateways, HTTP clients or browser networking.
+Experience with outbound web traffic at scale.
+Understanding of rate limits, retries, connection reuse, IP reputation, geo-routing or provider failover.
+Experience with distributed systems, queues, orchestration or worker-based architectures.
+Familiarity with browser automation, web automation or ecommerce data collection.
+Experience designing systems with resilience, monitoring and failure recovery in mind.
+Experience of multiple programming languages.

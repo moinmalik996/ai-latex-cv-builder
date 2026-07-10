@@ -1,0 +1,25 @@
+# Docker-friendly config. Keep your external CV mounted at /cv.
+latex_project_root: /cv
+main_tex_file: cv.tex
+section_files:
+  - cv/summary.tex
+  - cv/experience.tex
+# Optional: set to [] to auto-discover section-like .tex files.
+
+# Most custom-font CVs use XeLaTeX.
+latex_engine: xelatex
+
+# Keep artifacts and final PDF inside mounted project folder.
+build_work_dir: /app/.build
+output_dir: /app/output
+pdf_name: cv_tailored.pdf
+
+# AI model settings.
+model: gpt-4o-mini
+temperature: 0.2
+max_output_tokens: 3500
+min_keyword_matches: 5
+min_experience_keyword_matches: 4
+min_missing_keyword_matches: 2
+min_metric_bullets: 2
+max_experience_bullet_chars: 120

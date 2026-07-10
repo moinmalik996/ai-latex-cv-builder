@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated CV outputs and local build artifacts
+output/
+.build/
+*.fdb_latexmk
+*.fls
+*.synctex.gz
