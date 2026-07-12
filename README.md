@@ -1,8 +1,8 @@
 # ai-latex-cv-builder
 
-AI-assisted LaTeX CV tailoring pipeline for Overleaf-style projects.
+AI-assisted LaTeX CV tailoring for Overleaf-style resumes.
 
-The tool rewrites selected CV section files based on a job description and compiles a PDF with your existing template/style.
+It rewrites selected CV sections from a job description and compiles the result with your existing template.
 
 ## What It Does
 
