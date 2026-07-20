@@ -24,6 +24,57 @@ class RewriteValidationError(ValueError):
         self.details = details or {}
 
 
+def _brace_delta_ignoring_comments(content: str) -> int:
+    # Track unescaped { and } while ignoring commented text after unescaped %.
+    delta = 0
+    for line in content.splitlines():
+        in_comment = False
+        i = 0
+        while i < len(line):
+            ch = line[i]
+            prev = line[i - 1] if i > 0 else ""
+            if not in_comment and ch == "%" and prev != "\\":
+                in_comment = True
+                i += 1
+                continue
+            if in_comment:
+                i += 1
+                continue
+
+            if ch == "{" and prev != "\\":
+                delta += 1
+            elif ch == "}" and prev != "\\":
+                delta -= 1
+                if delta < 0:
+                    return delta
+            i += 1
+    return delta
+
+
+def _sanitize_tex_content(rel_path: str, content: str) -> str:
+    delta = _brace_delta_ignoring_comments(content)
+    if delta < 0:
+        raise RewriteValidationError(
+            f"Rewritten file has unmatched closing braces: {rel_path}",
+            code="unmatched_closing_brace",
+            details={"path": rel_path, "brace_delta": delta},
+        )
+    if delta == 0:
+        return content
+
+    suffix = "}" * delta
+    if content.endswith("\n"):
+        return content + suffix
+    return content + "\n" + suffix
+
+
+def _sanitize_rewritten_sections(rewritten: dict[str, str]) -> dict[str, str]:
+    sanitized: dict[str, str] = {}
+    for rel_path, content in rewritten.items():
+        sanitized[rel_path] = _sanitize_tex_content(rel_path, content)
+    return sanitized
+
+
 def _discover_section_files(config: ProjectConfig) -> list[str]:
     discovered: list[str] = []
     main_tex = config.main_tex_file.strip().lstrip("./")
@@ -127,7 +178,7 @@ def _rewrite_once(
     )
     candidate_files = {path: result.files[path] for path in expected_paths if path in result.files}
     _validate_rewrites(config, current, candidate_files, result.required_keywords, expected_paths)
-    return candidate_files
+    return _sanitize_rewritten_sections(candidate_files)
 
 
 def tailor_only(config: ProjectConfig, prompt_template: Path, job_description: str, dry_run: bool) -> Path | None:
@@ -143,7 +194,12 @@ def tailor_only(config: ProjectConfig, prompt_template: Path, job_description: s
     return None
 
 
-def tailor_and_build(config: ProjectConfig, prompt_template: Path, job_description: str, dry_run: bool) -> Path:
+def tailor_and_build(
+    config: ProjectConfig,
+    prompt_template: Path,
+    job_description: str,
+    dry_run: bool,
+) -> Path:
     rewritten = _rewrite_once(config, prompt_template, job_description)
 
     if dry_run:
@@ -160,7 +216,10 @@ def tailor_and_build(config: ProjectConfig, prompt_template: Path, job_descripti
     return compile_pdf(staged_config)
 
 
-def build_from_preview(config: ProjectConfig, preview_dir: Path) -> Path:
+def build_from_preview(
+    config: ProjectConfig,
+    preview_dir: Path,
+) -> Path:
     worktree_root = _create_worktree(config)
     staged_config = replace(config, latex_project_root=worktree_root)
     _apply_preview(preview_dir, staged_config)

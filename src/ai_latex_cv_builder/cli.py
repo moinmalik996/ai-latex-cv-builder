@@ -17,6 +17,33 @@ def _read_job_description(path: Path) -> str:
     return text
 
 
+def _load_config(config_arg: str) -> ProjectConfig:
+    config_path = Path(config_arg)
+    if config_path.exists():
+        return ProjectConfig.from_yaml(config_path)
+
+    suggestions: list[Path] = []
+    if not config_path.is_absolute():
+        prefixed = Path("config") / config_path
+        if prefixed.exists():
+            suggestions.append(prefixed)
+
+    config_dir = Path("config")
+    if config_dir.exists():
+        by_name = config_dir / config_path.name
+        if by_name.exists() and by_name not in suggestions:
+            suggestions.append(by_name)
+
+    if suggestions:
+        suggestion_text = ", ".join(str(p) for p in suggestions)
+        raise ValueError(
+            f"Config file not found: {config_arg}. "
+            f"Did you mean: {suggestion_text}?"
+        )
+
+    raise ValueError(f"Config file not found: {config_arg}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="AI-assisted LaTeX CV builder")
     parser.add_argument(
@@ -54,7 +81,7 @@ def main() -> None:
     load_dotenv()
 
     args = build_parser().parse_args()
-    config = ProjectConfig.from_yaml(Path(args.config))
+    config = _load_config(args.config)
     prompt_template = Path(args.prompt_template)
 
     if args.command == "tailor":

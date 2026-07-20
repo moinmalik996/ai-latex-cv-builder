@@ -72,6 +72,7 @@ Main settings:
 3. `section_files`: files AI can rewrite.
 4. `latex_engine`: usually `xelatex`.
 5. `output_dir`: where PDF/previews are written.
+6. `pdf_name`: output filename for PDF builds.
 
 Compatibility note: config keys like `min_keyword_matches`, `min_metric_bullets`, and `max_experience_bullet_chars` may still exist in sample YAML, but they are currently not enforced in the relaxed rewrite flow.
 
