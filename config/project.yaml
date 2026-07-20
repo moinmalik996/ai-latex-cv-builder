@@ -1,5 +1,5 @@
 # Copy this file to config/project.yaml and customize paths.
-latex_project_root: ../../MoinAbbasCV
+latex_project_root: ../cv-template
 main_tex_file: cv.tex
 section_files:
   - cv/summary.tex

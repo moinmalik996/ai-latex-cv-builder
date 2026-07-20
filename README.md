@@ -1,54 +1,70 @@
 # ai-latex-cv-builder
 
-AI-assisted LaTeX CV tailoring for Overleaf-style resumes.
+AI-assisted LaTeX CV tailoring for Awesome-CV.
 
-It rewrites selected CV sections from a job description and compiles the result with your existing template.
+This repository is set up for a public-friendly workflow:
+- the real CV template lives in [cv-template](cv-template)
+- only `cv/summary.tex` and `cv/experience.tex` are rewritten
+- the rest of the CV stays exactly as authored
+- the final PDF is compiled from `cv-template/cv.tex`
+
+## Quick Start
+
+1. Copy the local config and env files:
+
+```bash
+make setup
+```
+
+2. Put your OpenAI key in [.env](.env).
+
+3. Build the PDF:
+
+```bash
+make build
+```
+
+4. Tailor the CV with the sample job description:
+
+```bash
+make tailor JOB=job.sample.txt
+```
+
+5. Review the preview and compile the final PDF:
+
+```bash
+make run JOB=job.sample.txt
+```
 
 ## What It Does
 
-1. Reads CV section `.tex` files.
-2. Sends job description + current sections to the model.
-3. Writes rewritten sections to a preview folder (`--dry-run`) or stages for build.
-4. Compiles PDF via `latexmk`.
-
-Current behavior is intentionally flexible: the app performs a single-pass rewrite and does not enforce strict line-length/keyword/metric constraints.
+1. Reads the current `cv-template/cv/summary.tex` and `cv-template/cv/experience.tex` files.
+2. Sends the job description plus those two section files to the model.
+3. Writes rewritten sections to a preview folder when `--dry-run` is used.
+4. Stages the rewritten sections back into the original `cv-template` tree.
+5. Compiles the full PDF from `cv-template/cv.tex` with `latexmk`.
 
 ## Commands
 
-The CLI supports 3 commands:
-
-1. `tailor`
-2. `build`
-3. `run`
-
 ### `tailor`
-
-Rewrite sections only.
-
-```bash
-python -m ai_latex_cv_builder --config config/project.yaml tailor --job job.txt
-```
-
-Preview mode (recommended first):
+Rewrite the two targeted sections only.
 
 ```bash
-python -m ai_latex_cv_builder --config config/project.yaml tailor --job job.txt --dry-run
+python -m ai_latex_cv_builder --config config/project.yaml tailor --job job.sample.txt --dry-run
 ```
 
 ### `build`
-
-Compile current LaTeX state to PDF (no AI call).
+Compile the current LaTeX template to PDF.
 
 ```bash
 python -m ai_latex_cv_builder --config config/project.yaml build
 ```
 
 ### `run`
-
-Rewrite then compile in one step:
+Rewrite the sections and compile the PDF in one step.
 
 ```bash
-python -m ai_latex_cv_builder --config config/project.yaml run --job job.txt
+python -m ai_latex_cv_builder --config config/project.yaml run --job job.sample.txt
 ```
 
 Build from an already reviewed preview:
@@ -59,87 +75,56 @@ python -m ai_latex_cv_builder --config config/project.yaml run --preview-dir out
 
 ## Config
 
-Start from:
+Copy the example config:
 
 ```bash
 cp config/project.example.yaml config/project.yaml
 ```
 
-Main settings:
+The default config points to the bundled template in [cv-template](cv-template):
 
-1. `latex_project_root`: root of the LaTeX CV project.
-2. `main_tex_file`: main entry file (for example `main.tex` or `cv.tex`).
-3. `section_files`: files AI can rewrite.
-4. `latex_engine`: usually `xelatex`.
-5. `output_dir`: where PDF/previews are written.
-6. `pdf_name`: output filename for PDF builds.
+1. `latex_project_root: ../cv-template`
+2. `main_tex_file: cv.tex`
+3. `section_files: [cv/summary.tex, cv/experience.tex]`
 
-Compatibility note: config keys like `min_keyword_matches`, `min_metric_bullets`, and `max_experience_bullet_chars` may still exist in sample YAML, but they are currently not enforced in the relaxed rewrite flow.
+If you want to use your own CV, copy that folder somewhere else and update those values in [config/project.yaml](config/project.yaml). Keep the folder name generic if you intend to publish the repo.
 
-### Unknown section names / custom templates
+## Docker
 
-Set `section_files: []` to auto-discover section-like `.tex` files.
-
-## Credentials
-
-AI commands (`tailor`, `run`) require `OPENAI_API_KEY` (or `OPENAI_ADMIN_KEY`).
-
-Local:
-
-```bash
-export OPENAI_API_KEY='<your-openai-api-key>'
-```
-
-Docker (inline):
-
-```bash
-docker compose run --rm -e OPENAI_API_KEY='<your-openai-api-key>' ai-cv --config config/project.docker.example.yaml tailor --job job.txt --dry-run
-```
-
-Important: `-e OPENAI_API_KEY` only forwards an existing host variable. If it is unset on host, container gets no key.
-
-## Docker Usage
-
-Build image:
+Build the image:
 
 ```bash
 docker compose build
 ```
 
-Compile only:
+Compile the PDF:
 
 ```bash
-docker compose run --rm ai-cv --config config/project.docker.example.yaml build
+docker compose run --rm ai-cv build
 ```
 
-Tailor preview:
+Tailor the CV:
 
 ```bash
-docker compose run --rm -e OPENAI_API_KEY='<your-openai-api-key>' ai-cv --config config/project.docker.example.yaml tailor --job job.txt --dry-run
+docker compose run --rm ai-cv tailor --job job.sample.txt --dry-run
 ```
 
-Build from preview:
+Run the full flow from a preview:
 
 ```bash
-docker compose run --rm ai-cv --config config/project.docker.example.yaml run --preview-dir output/preview-YYYYMMDD-HHMMSS
+docker compose run --rm ai-cv run --preview-dir output/preview-YYYYMMDD-HHMMSS
 ```
 
-Mount model used by default in this repo:
+## Makefile Targets
 
-1. Repo mounted to `/app`
-2. External CV mounted to `/cv`
-
-## Project Files
-
-1. `src/ai_latex_cv_builder/cli.py`: command routing.
-2. `src/ai_latex_cv_builder/pipeline.py`: section read/write, preview flow, staging/build orchestration.
-3. `src/ai_latex_cv_builder/ai_writer.py`: OpenAI request/response handling.
-4. `src/ai_latex_cv_builder/latex.py`: `latexmk` PDF compilation.
-5. `prompts/rewrite_sections.md`: model rewrite instructions.
+1. `make setup` - copy `.env.example` and `config/project.example.yaml` if missing
+2. `make build` - compile the PDF
+3. `make tailor JOB=...` - generate a preview
+4. `make run JOB=...` - tailor and build in one step
+5. `make preview PREVIEW_DIR=...` - build from a reviewed preview
 
 ## Notes
 
 1. `build` does not require an API key.
-2. `tailor --dry-run` is safest for review before applying changes.
-3. Keep your local Overleaf directory structure intact (fonts/includes).
-4. Review generated content for truthfulness before sharing.
+2. `tailor --dry-run` is the safest first step.
+3. The repository intentionally keeps the rewrite scope narrow so users can keep their original CV structure.

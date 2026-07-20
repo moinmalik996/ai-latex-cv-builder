@@ -1,5 +1,6 @@
-# Docker-friendly config. Keep your external CV mounted at /cv.
-latex_project_root: /cv
+# Docker-friendly config for the bundled CV.
+# Default layout: rewrite only cv/summary.tex and cv/experience.tex inside cv-template.
+latex_project_root: /app/cv-template
 main_tex_file: cv.tex
 section_files:
   - cv/summary.tex
@@ -9,7 +10,7 @@ section_files:
 # Most custom-font CVs use XeLaTeX.
 latex_engine: xelatex
 
-# Keep artifacts and final PDF inside mounted project folder.
+# Keep artifacts and final PDF inside the mounted project folder.
 build_work_dir: /app/.build
 output_dir: /app/output
 pdf_name: cv_tailored.pdf

@@ -1,0 +1,6 @@
+About the job
+We are looking for a pragmatic backend engineer to build internal infrastructure and automation tooling.
+
+The role focuses on Python services, APIs, reliability, observability, data workflows, and operational support.
+
+We value engineers who can own ambiguous technical problems, work across databases and queues, and improve systems used by other teams.

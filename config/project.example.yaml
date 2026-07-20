@@ -1,9 +1,10 @@
 # Copy this file to config/project.yaml and customize paths.
-latex_project_root: ../MoinAbbasCV
-main_tex_file: main.tex
+# Default layout: rewrite only cv/summary.tex and cv/experience.tex inside cv-template.
+latex_project_root: ../cv-template
+main_tex_file: cv.tex
 section_files:
-  - sections/summary.tex
-  - sections/experience.tex
+  - cv/summary.tex
+  - cv/experience.tex
 # Optional: set to [] to auto-discover section-like .tex files.
 
 # Engine matters for custom fonts. Most modern CV templates use xelatex or lualatex.
