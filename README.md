@@ -8,6 +8,21 @@ This repository is set up for a public-friendly workflow:
 - the rest of the CV stays exactly as authored
 - the final PDF is compiled from `cv-template/cv.tex`
 
+## Why I Built This
+
+When applying for jobs, I had the same repetitive process each time:
+
+1. Paste the job description and my CV PDF into ChatGPT.
+2. Ask for stronger keywords and role-matched statements.
+3. Manually copy those updates into my Overleaf LaTeX files.
+4. Rebuild the PDF and upload it for the application.
+
+That workflow worked, but it was slow and repetitive.
+
+This project is my way of partially automating that process. It rewrites only the sections I usually tailor most (`summary` and `experience`) and then rebuilds the full CV PDF.
+
+It is not intended to be 100% automatic or perfect. I still review what AI generates before final submission, but this saves time and reduces repetitive manual edits.
+
 ## Quick Start
 
 1. Copy the local config and env files:
